@@ -13,37 +13,46 @@ function Controller(graph, view)
 Controller.prototype.start = function()
 {
   this.view.listen();
+  this.view.start();
   this.refreshVisible();
 }
 
 Controller.prototype.refreshVisible = function()
 {
-  for(var i = 0; i < this.visibleVertices; i ++)
-    vertex.removeFromView();
-
-  for(var i = 0; i < this.visibleEdges; i ++)
-    edge.removeFromView();
-
   var verticesAndEdges = this.graph.getVisibleVerticesAndEdges();
-  this.visibleVertices = verticesAndEdges.vertices;
-  this.visibleEdges = verticesAndEdges.edges;
+  var newVisibleVertices = verticesAndEdges.vertices;
+  var newVisibleEdges = verticesAndEdges.edges;
+
+  var verticesToAdd = this.visibleVertices ?
+    Array.diff(newVisibleVertices, this.visibleVertices) : newVisibleVertices;
+  var edgesToAdd = this.visibleEdges ?
+    Array.diff(newVisibleEdges, this.visibleEdges) : newVisibleEdges;
+  var verticesToRemove = this.visibleVertices ?
+    Array.diff(this.visibleVertices, newVisibleVertices) : [];
+  var edgesToRemove = this.visibleEdges ?
+    Array.diff(this.visibleEdges, newVisibleEdges) : [];
 
   var self = this;
-  for(var i = 0; i < this.visibleVertices.length; i ++) {
-    var vertex = this.visibleVertices[i];
-    vertex.prepareForView(this.view.$canvas);
+  for(var i = 0; i < verticesToAdd.length; i ++) {
+    var vertex = verticesToAdd[i];
+    this.view.prepare(vertex);
 
     vertex.onClick = function() {
       self.moveTo(this);
     };
   }
 
-  for(var i = 0; i < this.visibleEdges.length; i ++) {
-    var edge = this.visibleEdges[i];
-    edge.prepareForView(this.view.$canvas);
-  }
+  for(var i = 0; i < edgesToAdd.length; i ++)
+    /* this.view.prepare(edgesToAdd[i]) */ ;
 
-  this.view.update(this.visibleVertices, this.visibleEdges);
+  for(var i = 0; i < verticesToRemove.length; i ++)
+    this.view.remove(verticesToRemove[i]);
+  
+  for(var i = 0; i < edgesToRemove.length; i ++)
+    this.view.remove(edgesToRemove[i]);
+  
+  this.visibleVertices = newVisibleVertices;
+  this.visibleEdges = newVisibleEdges;
 }
 
 Controller.prototype.moveTo = function(vertex)

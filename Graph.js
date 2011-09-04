@@ -18,6 +18,7 @@ Graph.prototype.getVisibleVerticesAndEdges = function()
 
     for(var i = 0; i < tempVertices.length; i ++) {
       var vertex = tempVertices[i];
+
       var adjacentVertices = vertices[i].adjacent;
 
       for(var j = 0; j < adjacentVertices.length; j ++) {

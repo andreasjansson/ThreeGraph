@@ -1,42 +1,47 @@
-function View($canvas, onLoad)
+function View($canvas)
 {
-  window.$canvas = $canvas;
-
-  $canvas.svg({onLoad: function(svg) {
-    window.svg = svg;
-    onLoad();
-  }});
-
   this.vertices;
   this.edges;
-  this.cameraPosition;
-  this.cameraAngle;
 
-  this.mouseX = null;
-  this.mouseY = null;
+  this.scene = new THREE.Scene();
+	this.camera = new THREE.GraphCamera(Config.camera.fov,
+                                      window.innerWidth / window.innerHeight,
+                                      Config.camera.near, Config.camera.far);
+  this.camera.lookSpeed = Config.camera.lookSpeed;
+  this.scene.addChild(this.camera);
+	this.renderer = new THREE.CanvasRenderer();
+	this.renderer.setSize(window.innerWidth, window.innerHeight);
+	$canvas.append(this.renderer.domElement);
+
+  this.interval = null;
 }
 
-View.prototype.update = function(vertices, edges)
+View.prototype.start = function()
 {
-  if(vertices && edges) {
-    this.vertices = vertices;
-    this.edges = edges;
-  }
+  var self = this;
+  this.interval = window.setInterval(function() {
+    self.update();
+  }, Config.frameRate);
+}
 
-  var projection = new Projection(
-    new Vector2d(window.$canvas.width() / 2, window.$canvas.height() / 2),
-    this.cameraPosition, this.cameraAngle);
+/**
+ * @param Vector3d position
+ */
+View.prototype.setCameraPosition = function(position)
+{
+  this.camera.x = position.x;
+  this.camera.y = position.y;
+  this.camera.z = position.z;
+}
 
-  for(var i = 0; i < this.vertices.length; i ++)
-    this.vertices[i].projectedPos = projection.project(this.vertices[i].pos);
+View.prototype.update = function()
+{
+  this.renderer.render(this.scene, this.camera);
+}
 
-  for(var i = 0; i < this.vertices.length; i ++) {
-    var vertex = this.vertices[i];
-    vertex.update(this.cameraPosition.distance(vertex.pos));
-  }
-
-  for(var i = 0; i < this.edges.length; i ++)
-    this.edges[i].update();
+View.prototype.prepare = function(object)
+{
+  object.prepareForView(this.scene);
 }
 
 View.prototype.moveTo = function(vertex, callback)
@@ -63,21 +68,5 @@ View.prototype.moveTo = function(vertex, callback)
 
 View.prototype.listen = function()
 {
-  var self = this;
-  window.listenInterval = window.setInterval(function() {
-    var x = self.mouseX;
-    var y = self.mouseY;
-    var midX = window.$canvas.width() / 2;
-    var midY = window.$canvas.height() / 2;
-    var dX = x - midX;
-    var dY = y - midY;
 
-    self.cameraAngle = self.cameraAngle.add(new Vector3d(dX / 10000, -dY / 10000, 0));
-    self.update();
-  }, Config.frameRate);
-
-  window.$canvas.mouseover(function(event) {
-    self.mouseX = event.pageX;
-    self.mouseY = event.pageY;
-  });
 }
