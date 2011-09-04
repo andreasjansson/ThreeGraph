@@ -1,50 +1,67 @@
-function Graph(vertices, centredVertex)
+function Graph(graphNodes, centredGraphNodeName)
 {
-  this.vertices = vertices;
+  this.graphNodes = graphNodes;
   this.viewableDistance = Config.viewableDistance;
-  this.centredVertex = typeof centredVertex == "undefined" ?
-    this.getRandomVertex() : centredVertex;
+  if(typeof centredGraphNodeName == "undefined")
+    this.centredGraphNode = this.getRandomGraphNode();
+  else {
+    var graphNode = this.getGraphNodeByName(centredGraphNodeName);
+    if(graphNode)
+      this.centredGraphNode = graphNode;
+    else
+      this.centredGraphNode = this.getRandomGraphNode();
+  }
 }
 
 // depth-limited breadth-first search;
-Graph.prototype.getVisibleVerticesAndEdges = function()
+Graph.prototype.getVisibleGraphNodesAndEdges = function()
 {
-  var vertices = [this.centredVertex];
+  var graphNodes = [this.centredGraphNode];
   var edges = [];
 
-  var tempVertices = [this.centredVertex];
+  var tempGraphNodes = [this.centredGraphNode];
   for(var depth = 0; depth < this.viewableDistance; depth ++) {
-    var nextTempVertices = [];
+    var nextTempGraphNodes = [];
 
-    for(var i = 0; i < tempVertices.length; i ++) {
-      var vertex = tempVertices[i];
+    for(var i = 0; i < tempGraphNodes.length; i ++) {
+      var graphNode = tempGraphNodes[i];
 
-      var adjacentVertices = vertices[i].adjacent;
+      var adjacentGraphNodes = graphNodes[i].adjacent;
 
-      for(var j = 0; j < adjacentVertices.length; j ++) {
-        var adjacentVertex = adjacentVertices[j];
+      for(var j = 0; j < adjacentGraphNodes.length; j ++) {
+        var adjacentGraphNode = adjacentGraphNodes[j];
         var isVisited = false;
-        for(var k = 0; k < vertices.length; k ++) {
-          if(vertices[k] == adjacentVertex) {
+        for(var k = 0; k < graphNodes.length; k ++) {
+          if(graphNodes[k] == adjacentGraphNode) {
             isVisited = true;
             break;
           }
         }
 
         if(!isVisited) {
-          vertices.push(adjacentVertex);
-          nextTempVertices.push(adjacentVertex);
+          graphNodes.push(adjacentGraphNode);
+          nextTempGraphNodes.push(adjacentGraphNode);
         }
-        edges.push(new Edge(vertex, adjacentVertex));
+        edges.push(new Edge(graphNode, adjacentGraphNode));
       }
     }
-    tempVertices = nextTempVertices;
+    tempGraphNodes = nextTempGraphNodes;
   }
 
-  return {vertices: vertices, edges: edges};
+  return {graphNodes: graphNodes, edges: edges};
 }
 
-Graph.prototype.getRandomVertex = function()
+Graph.prototype.getRandomGraphNode = function()
 {
-  return this.vertices[Math.floor(Math.random() * this.vertices.length)];
+  return this.graphNodes[Math.floor(Math.random() * this.graphNodes.length)];
+}
+
+Graph.prototype.getGraphNodeByName = function(name)
+{
+  for(var i = 0; i < this.graphNodes.length; i ++) {
+    if(unescape(this.graphNodes[i].name) == name)
+      return this.graphNodes[i];
+  }
+
+  return null;
 }

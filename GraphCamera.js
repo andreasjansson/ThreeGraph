@@ -54,10 +54,11 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 	var zTemp = new THREE.Vector3();
 	var rollMatrix = new THREE.Matrix4();
 
+  var oldMouseX, oldMouseY, mouseX = 0, mouseY = 0, mouseDown = false;
+  var rotateX = 0, rotateY = 0;
+
 	var doRoll = false, rollDirection = 1, forwardSpeed = 0, sideSpeed = 0, upSpeed = 0;
 
-	var mouseX = 0, mouseY = 0;
-	
 	var windowHalfX = window.innerWidth / 2;
 	var windowHalfY = window.innerHeight / 2;
 
@@ -65,52 +66,42 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 
 	this.update = function() {
 
-		var now = new Date().getTime();
+    var newRotateX, newRotateY;
 
-		if ( this.lastUpdate == -1 ) this.lastUpdate = now;
-		
-		this.delta = ( now - this.lastUpdate ) / 1000;
-		this.lastUpdate = now;
+    if(mouseDown) {
 
-		if ( this.mouseLook ) {
+      if(oldMouseX || oldMouseY) {
+        newRotateX = oldMouseX - mouseX;
+        newRotateY = oldMouseY - mouseY;
 
-			var actualLookSpeed = this.delta * this.lookSpeed;
+        rotateX = (rotateX + newRotateX) / 2;
+        rotateY = (rotateY + newRotateY) / 2;
+      }
+      else {
+        rotateX = rotateX / 2;
+        rotateY = rotateY / 2;
+      }
 
-			this.rotateHorizontally( actualLookSpeed * mouseX );
-			this.rotateVertically( actualLookSpeed * mouseY );
+      oldMouseX = mouseX;
+      oldMouseY = mouseY;
+    }
+    else {
+      rotateX = rotateX / 1.2;
+      rotateY = rotateY / 1.2;
+    }
 
-		}
+    if(rotateX)
+      this.rotateVertically(- (rotateY / 1000) * this.lookSpeed);
 
-		var actualSpeed = this.delta * this.movementSpeed;
-		var forwardOrAuto = ( forwardSpeed > 0 || ( this.autoForward && ! ( forwardSpeed < 0 ) ) ) ? 1 : forwardSpeed;
-		
-		this.translateZ( actualSpeed * forwardOrAuto );
-		this.translateX( actualSpeed * sideSpeed );
-		this.translateY( actualSpeed * upSpeed );
+    if(rotateY)
+      this.rotateHorizontally((rotateX / 1000) * this.lookSpeed);
 
-		if( doRoll ) {
-			
-			this.roll += this.rollSpeed * this.delta * rollDirection;
+		this.matrix.n14 = this.position.x;
+		this.matrix.n24 = this.position.y;
+		this.matrix.n34 = this.position.z;
 
-		}
-		
-		// cap forward up / down
-		
-		if( this.forward.y > this.constrainVertical[ 1 ] ) {
-			
-			this.forward.y = this.constrainVertical[ 1 ];
-			this.forward.normalize();
-			
-		} else if( this.forward.y < this.constrainVertical[ 0 ] ) {
-			
-			this.forward.y = this.constrainVertical[ 0 ];
-			this.forward.normalize();
-			
-		}
-
-
-		// construct unrolled camera matrix
-	
+		this.matrixWorldNeedsUpdate = true;
+    
 		zTemp.copy( this.forward );
 		yTemp.set( 0, 1, 0 );
 	
@@ -121,29 +112,6 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 		this.matrix.n21 = xTemp.y; this.matrix.n22 = yTemp.y; this.matrix.n23 = zTemp.y;
 		this.matrix.n31 = xTemp.z; this.matrix.n32 = yTemp.z; this.matrix.n33 = zTemp.z;
 		
-		
-		// calculate roll matrix
-	
-		rollMatrix.identity();
-		rollMatrix.n11 = Math.cos( this.roll ); rollMatrix.n12 = -Math.sin( this.roll );
-		rollMatrix.n21 = Math.sin( this.roll ); rollMatrix.n22 =  Math.cos( this.roll );
-	
-	
-		// multiply camera with roll
-	
-		this.matrix.multiplySelf( rollMatrix );
-		this.matrixWorldNeedsUpdate = true;
-	
-		
-		// set position
-	
-		this.matrix.n14 = this.position.x;
-		this.matrix.n24 = this.position.y;
-		this.matrix.n34 = this.position.z;
-		
-		
-		// call supr
-
 		this.supr.update.call( this );
 
 	};
@@ -172,9 +140,8 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 	
 	};
 	
-
 	this.rotateHorizontally = function ( amount ) {
-		
+
 		// please note that the amount is NOT degrees, but a scale value
 		
 		xTemp.set( this.matrix.n11, this.matrix.n21, this.matrix.n31 );
@@ -196,43 +163,54 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 		this.forward.normalize();
 	
 	};
-
 	function onMouseMove( event ) {
-
-		mouseX = ( event.clientX - windowHalfX ) / window.innerWidth;
-		mouseY = ( event.clientY - windowHalfY ) / window.innerHeight;
-
+    if(mouseDown) {
+      mouseX = event.pageX;
+      mouseY = event.pageY;
+    }
 	};
 	
-	this.onClick = function(event) { }
+	function onMouseDown ( event ) {
 
-	function onMouseUp ( event ) {
-
+    mouseX = event.pageX;
+    mouseY = event.pageY;
+    oldMouseX = oldMouseY = null;
 		event.preventDefault();
 		event.stopPropagation();
 
+    mouseDown = true;
+
+    /*
+
 		switch ( event.button ) {
 
-			case 0: forwardSpeed = 0; break;
-			case 2: forwardSpeed = 0; break;
+			case 0: forwardSpeed = 1; break;
+			case 2: forwardSpeed = -1; break;
 
 		}
+
+    */
+
+	};
+
+	function onMouseUp ( event ) {
+
+    oldMouseX = oldMouseY = null;
+    mouseDown = false;
 
 	};
 	
 	this.domElement.addEventListener( 'contextmenu', function ( event ) { event.preventDefault(); }, false );
 
-  var self = this;
 	this.domElement.addEventListener( 'mousemove', onMouseMove, false );
-	this.domElement.addEventListener( 'click', function(event) {
-    self.onClick(event)
-  }, false );	
+	this.domElement.addEventListener( 'mousedown', onMouseDown, false );
+	this.domElement.addEventListener( 'mouseup', onMouseUp, false );
 
 };
 
 
 THREE.GraphCamera.prototype = new THREE.Camera();
-THREE.GraphCamera.prototype.constructor = THREE.RollCamera;
+THREE.GraphCamera.prototype.constructor = THREE.GraphCamera;
 THREE.GraphCamera.prototype.supr = THREE.Camera.prototype;
 
 

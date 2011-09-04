@@ -3,7 +3,7 @@ Reader = function(indicesURL, adjlistURL, layoutURL)
   this.indices = null;
   this.adjlist = null;
   this.layout = null;
-  this.vertices = [];
+  this.graphNodes = [];
 
   var self = this;
   var checkFunction = function() {
@@ -43,28 +43,28 @@ Reader.prototype.readLayout = function(url, callback)
 
 Reader.prototype.parse = function()
 {
-  var vertices = [];
+  var graphNodes = [];
   for(var key in this.indices) {
-    vertices[key] = new Vertex(this.indices[key]);
+    graphNodes[key] = new GraphNode(this.indices[key]);
   }
 
   for(var key in this.adjlist) {
-    var vertex = vertices[key];
+    var graphNode = graphNodes[key];
     var adjIndices = this.adjlist[key];
     for(var adjKey in adjIndices)
-      vertex.addAdjacent(vertices[adjIndices[adjKey]]);
+      graphNode.addAdjacent(graphNodes[adjIndices[adjKey]]);
   }
 
   for(var key in this.layout) {
     var point = this.layout[key];
 
-    if((key in vertices))
-      vertices[key].pos = new Vector3d(point.x, point.y, point.z);
+    if((key in graphNodes))
+      graphNodes[key].pos = new Vector3d(point.x, point.y, point.z);
   }
 
   // drop "named" indices
-  for(var key in vertices)
-    this.vertices.push(vertices[key]);
+  for(var key in graphNodes)
+    this.graphNodes.push(graphNodes[key]);
 
   this.onLoad();
 }

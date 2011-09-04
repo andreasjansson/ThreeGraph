@@ -2,11 +2,10 @@ function Controller(graph, view)
 {
   this.graph = graph;
   this.view = view;
-  this.view.cameraPosition = this.graph.centredVertex.pos;
-  this.view.cameraAngle = this.graph.centredVertex.pos.
-    directionTo(Vector3d.origin());
+  this.view.setCameraPosition(graph.centredGraphNode.pos.
+                              subtract(new Vector3d(0, 0, 20)));
 
-  this.visibleVertices;
+  this.visibleGraphNodes;
   this.visibleEdges;
 }
 
@@ -19,47 +18,47 @@ Controller.prototype.start = function()
 
 Controller.prototype.refreshVisible = function()
 {
-  var verticesAndEdges = this.graph.getVisibleVerticesAndEdges();
-  var newVisibleVertices = verticesAndEdges.vertices;
-  var newVisibleEdges = verticesAndEdges.edges;
+  var graphNodesAndEdges = this.graph.getVisibleGraphNodesAndEdges();
+  var newVisibleGraphNodes = graphNodesAndEdges.graphNodes;
+  var newVisibleEdges = graphNodesAndEdges.edges;
 
-  var verticesToAdd = this.visibleVertices ?
-    Array.diff(newVisibleVertices, this.visibleVertices) : newVisibleVertices;
+  var graphNodesToAdd = this.visibleGraphNodes ?
+    Array.diff(newVisibleGraphNodes, this.visibleGraphNodes) : newVisibleGraphNodes;
   var edgesToAdd = this.visibleEdges ?
     Array.diff(newVisibleEdges, this.visibleEdges) : newVisibleEdges;
-  var verticesToRemove = this.visibleVertices ?
-    Array.diff(this.visibleVertices, newVisibleVertices) : [];
+  var graphNodesToRemove = this.visibleGraphNodes ?
+    Array.diff(this.visibleGraphNodes, newVisibleGraphNodes) : [];
   var edgesToRemove = this.visibleEdges ?
     Array.diff(this.visibleEdges, newVisibleEdges) : [];
 
   var self = this;
-  for(var i = 0; i < verticesToAdd.length; i ++) {
-    var vertex = verticesToAdd[i];
-    this.view.prepare(vertex);
+  for(var i = 0; i < graphNodesToAdd.length; i ++) {
+    var graphNode = graphNodesToAdd[i];
+    this.view.prepare(graphNode);
 
-    vertex.onClick = function() {
+    graphNode.onClick = function() {
       self.moveTo(this);
     };
   }
 
   for(var i = 0; i < edgesToAdd.length; i ++)
-    /* this.view.prepare(edgesToAdd[i]) */ ;
+    this.view.prepare(edgesToAdd[i]);
 
-  for(var i = 0; i < verticesToRemove.length; i ++)
-    this.view.remove(verticesToRemove[i]);
+  for(var i = 0; i < graphNodesToRemove.length; i ++)
+    this.view.remove(graphNodesToRemove[i]);
   
   for(var i = 0; i < edgesToRemove.length; i ++)
     this.view.remove(edgesToRemove[i]);
   
-  this.visibleVertices = newVisibleVertices;
+  this.visibleGraphNodes = newVisibleGraphNodes;
   this.visibleEdges = newVisibleEdges;
 }
 
-Controller.prototype.moveTo = function(vertex)
+Controller.prototype.moveTo = function(graphNode)
 {
   var self = this;
-  this.view.moveTo(vertex, function() {
-    self.graph.centredVertex = vertex;
-    this.refreshVisible();
+  this.view.moveTo(graphNode, function() {
+    self.graph.centredGraphNode = graphNode;
+    self.refreshVisible();
   });
 }

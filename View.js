@@ -1,6 +1,6 @@
 function View($canvas)
 {
-  this.vertices;
+  this.graphNodes;
   this.edges;
 
   this.scene = new THREE.Scene();
@@ -9,18 +9,27 @@ function View($canvas)
                                       Config.camera.near, Config.camera.far);
   this.camera.lookSpeed = Config.camera.lookSpeed;
   this.scene.addChild(this.camera);
-	this.renderer = new THREE.CanvasRenderer();
+	this.renderer = new THREE.MyDOMRenderer();
 	this.renderer.setSize(window.innerWidth, window.innerHeight);
 	$canvas.append(this.renderer.domElement);
 
   this.interval = null;
+  this.moveFrames = null;
+  this.cameraDelta = null;
 }
 
 View.prototype.start = function()
 {
+  var maxIteration = 0000;
+  var iteration = 0;
+
   var self = this;
   this.interval = window.setInterval(function() {
     self.update();
+
+    if(maxIteration && iteration ++ > maxIteration)
+      window.clearInterval(self.interval);
+
   }, Config.frameRate);
 }
 
@@ -29,13 +38,17 @@ View.prototype.start = function()
  */
 View.prototype.setCameraPosition = function(position)
 {
-  this.camera.x = position.x;
-  this.camera.y = position.y;
-  this.camera.z = position.z;
+  this.camera.position.x = position.x;
+  this.camera.position.y = position.y;
+  this.camera.position.z = position.z;
 }
 
 View.prototype.update = function()
 {
+  if(this.moveFrames -- > 0) {
+    this.setCameraPosition((new Vector3d(this.camera.position)).
+                           add(this.cameraDelta));
+  }
   this.renderer.render(this.scene, this.camera);
 }
 
@@ -44,26 +57,21 @@ View.prototype.prepare = function(object)
   object.prepareForView(this.scene);
 }
 
-View.prototype.moveTo = function(vertex, callback)
+View.prototype.remove = function(object)
 {
-  var cameraPos = this.cameraPosition;
-  var vertexPos = vertex.pos;
+  object.removeFromView(this.scene);
+}
+
+View.prototype.moveTo = function(graphNode, callback)
+{
+  var cameraPos = new Vector3d(this.camera.position);
+  var targetPos = graphNode.pos.subtract(new Vector3d(0, 0, 20));
   var frameCount = Math.floor((Config.moveTime / 1000) * Config.frameRate);
-  var delta = vertexPos.subtract(cameraPos).divide(frameCount);
-  var frameIndex = 0;
 
-  var self = this;
-  var intervalID = window.setInterval(function() {
+  this.moveFrames = frameCount;
+  this.cameraDelta = targetPos.subtract(cameraPos).divide(frameCount);
 
-    if(frameIndex ++ >= frameCount) {
-      window.clearInterval(intervalID);
-      return;
-    }
-
-    self.cameraPosition = self.cameraPosition.add(delta);
-    self.update();
-
-  }, Config.frameRate);
+  callback();
 }
 
 View.prototype.listen = function()

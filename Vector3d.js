@@ -1,8 +1,16 @@
 function Vector3d(x, y, z)
 {
-  this.x = x;
-  this.y = y;
-  this.z = z;
+  // from 2d or 3d vector
+  if(typeof x == "object" && "x" in x && "y" in x) {
+    this.x = x.x;
+    this.y = x.y;
+    this.z = x.z || 0;
+  }
+  else {
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
 }
 
 Vector3d.origin = function()
@@ -55,3 +63,7 @@ Vector3d.prototype.length = function()
   return this.distance(Vector3d.origin());
 }
 
+Vector3d.prototype.toThreeJSVector3 = function()
+{
+  return new THREE.Vector3(this.x, this.y, this.z);
+}
