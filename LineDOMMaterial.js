@@ -1,4 +1,5 @@
 /**
+ * @author andreas jansson / http://jansson.me.uk/
  * @author mr.doob / http://mrdoob.com/
  * @author alteredq / http://alteredqualia.com/
  *

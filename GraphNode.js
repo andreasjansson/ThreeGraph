@@ -8,6 +8,8 @@ function GraphNode(name, pos, adjacent)
 
   this.particle = null;
   this.$div = null;
+
+  this.currentLevel = null;
 }
 
 GraphNode.prototype.addAdjacent = function(graphNode)
@@ -34,8 +36,6 @@ GraphNode.prototype.prepareForView = function(scene)
 		event.preventDefault();
 		event.stopPropagation();
 
-    console.log(event.button);
-
     switch(event.button) {
     case 0:
       self.onClick();
@@ -45,6 +45,11 @@ GraphNode.prototype.prepareForView = function(scene)
       break;
     }
   });
+}
+
+GraphNode.prototype.updateLevel = function()
+{
+  this.$div.attr("class", "level-" + this.currentLevel);
 }
 
 GraphNode.prototype.removeFromView = function(scene)
@@ -59,8 +64,9 @@ GraphNode.prototype.removeFromView = function(scene)
 
 GraphNode.prototype.niceName = function()
 {
-  return decodeURIComponent(unescape(this.name))
-    .replace(/_/g, " ").replace(/\([^\)]*band\)$/, '');
+  return decodeURIComponent(this.name)
+    .replace(/_/g, " ").replace(/\([^\)]*band\)$/, '')
+    .replace(/#.*$/, "");
 }
 
 GraphNode.prototype.onClick = function() { }

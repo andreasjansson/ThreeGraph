@@ -1,4 +1,5 @@
 /**
+ * @author andreas jansson / http://jansson.me.uk/
  * @author mr.doob / http://mrdoob.com/
  */
 
@@ -41,7 +42,7 @@ THREE.MyDOMRenderer = function () {
 						dom = material.domElement;
 
             var fontSize = element.z > .9999 ? 0 :
-              Math.round(Math.min(1, 1 - (element.z * 100 - 99)) * 120);
+              Math.round(Math.min(1, 1 - (element.z * 100 - 99)) * 100);
 
             dom.style.fontSize = fontSize + "px";
 						dom.style.left = (v1x - (dom.innerText.length * fontSize / 3)) + 'px';

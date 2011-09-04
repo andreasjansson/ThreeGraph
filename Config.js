@@ -10,6 +10,7 @@ Config.camera.fov = 60;
 Config.camera.near = 1;
 Config.camera.far = 1000;
 Config.camera.lookSpeed = 3;
+Config.camera.initialRotation = 100;
 
 Config.graphNode = {};
 Config.graphNode.size = 15;

@@ -5,6 +5,8 @@ function Edge(graphNode1, graphNode2)
 
   this.line = null;
   this.$div = null;
+
+  this.currentLevel = null;
 }
 
 Edge.prototype.prepareForView = function(scene)
@@ -36,3 +38,9 @@ Edge.prototype.removeFromView = function(scene)
     scene.removeObject(line);
   });
 }
+
+Edge.prototype.updateLevel = function()
+{
+  this.$div.attr("class", "level-" + this.currentLevel);
+}
+

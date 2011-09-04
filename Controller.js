@@ -49,6 +49,12 @@ Controller.prototype.refreshVisible = function()
   
   for(var i = 0; i < edgesToRemove.length; i ++)
     this.view.remove(edgesToRemove[i]);
+
+  for(var i = 0; i < newVisibleGraphNodes.length; i ++)
+    newVisibleGraphNodes[i].updateLevel();
+  
+  for(var i = 0; i < newVisibleEdges.length; i ++)
+    newVisibleEdges[i].updateLevel();
   
   this.visibleGraphNodes = newVisibleGraphNodes;
   this.visibleEdges = newVisibleEdges;

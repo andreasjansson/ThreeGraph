@@ -16,6 +16,7 @@ function Graph(graphNodes, centredGraphNodeName)
 // depth-limited breadth-first search;
 Graph.prototype.getVisibleGraphNodesAndEdges = function()
 {
+  this.centredGraphNode.currentLevel = 0;
   var graphNodes = [this.centredGraphNode];
   var edges = [];
 
@@ -39,10 +40,13 @@ Graph.prototype.getVisibleGraphNodesAndEdges = function()
         }
 
         if(!isVisited) {
+          adjacentGraphNode.currentLevel = depth;
           graphNodes.push(adjacentGraphNode);
           nextTempGraphNodes.push(adjacentGraphNode);
         }
-        edges.push(new Edge(graphNode, adjacentGraphNode));
+        var edge = new Edge(graphNode, adjacentGraphNode);
+        edge.currentLevel = depth;
+        edges.push(edge);
       }
     }
     tempGraphNodes = nextTempGraphNodes;

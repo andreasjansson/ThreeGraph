@@ -1,4 +1,5 @@
 /**
+ * @author andreas jansson / http://jansson.me.uk/
  * @author mikael emtinger / http://gomo.se/
  * @author alteredq / http://alteredqualia.com/
  *
@@ -19,7 +20,7 @@
  * }
  */
 
-THREE.GraphCamera = function ( fov, aspect, near, far ) {
+THREE.GraphCamera = function ( fov, aspect, near, far, initialRotation ) {
 
 	THREE.Camera.call( this, fov, aspect, near, far );
 
@@ -32,7 +33,7 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 	this.movementSpeed = 1;
 	this.rollSpeed = 1;
 
-	this.constrainVertical = [ -0.5, 0.5 ];
+	this.constrainVertical = [ -0.8, 0.8 ];
 
 	this.domElement = document;
 
@@ -55,7 +56,7 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 	var rollMatrix = new THREE.Matrix4();
 
   var oldMouseX, oldMouseY, mouseX = 0, mouseY = 0, mouseDown = false;
-  var rotateX = 0, rotateY = 0;
+  var rotateX = initialRotation, rotateY = 0;
 
 	var doRoll = false, rollDirection = 1, forwardSpeed = 0, sideSpeed = 0, upSpeed = 0;
 
@@ -86,15 +87,30 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
       oldMouseY = mouseY;
     }
     else {
-      rotateX = rotateX / 1.2;
-      rotateY = rotateY / 1.2;
+      // nice iphone like slide effect when you let go.
+      rotateX = rotateX / 1.1;
+      rotateY = rotateY / 1.1;
     }
 
-    if(rotateX)
+    if(rotateY)
       this.rotateVertically(- (rotateY / 1000) * this.lookSpeed);
 
-    if(rotateY)
+    if(rotateX)
       this.rotateHorizontally((rotateX / 1000) * this.lookSpeed);
+
+		// cap forward up / down
+		
+		if( this.forward.y > this.constrainVertical[ 1 ] ) {
+			
+			this.forward.y = this.constrainVertical[ 1 ];
+			this.forward.normalize();
+			
+		} else if( this.forward.y < this.constrainVertical[ 0 ] ) {
+			
+			this.forward.y = this.constrainVertical[ 0 ];
+			this.forward.normalize();
+			
+		}
 
 		this.matrix.n14 = this.position.x;
 		this.matrix.n24 = this.position.y;
@@ -114,30 +130,6 @@ THREE.GraphCamera = function ( fov, aspect, near, far ) {
 		
 		this.supr.update.call( this );
 
-	};
-	
-	this.translateX = function ( distance ) {
-		
-		this.position.x += this.matrix.n11 * distance;
-		this.position.y += this.matrix.n21 * distance;
-		this.position.z += this.matrix.n31 * distance;
-		
-	};
-	
-	this.translateY = function ( distance ) {
-		
-		this.position.x += this.matrix.n12 * distance;
-		this.position.y += this.matrix.n22 * distance;
-		this.position.z += this.matrix.n32 * distance;
-		
-	};
-
-	this.translateZ = function ( distance ) {
-	
-		this.position.x -= this.matrix.n13 * distance;
-		this.position.y -= this.matrix.n23 * distance;
-		this.position.z -= this.matrix.n33 * distance;
-	
 	};
 	
 	this.rotateHorizontally = function ( amount ) {

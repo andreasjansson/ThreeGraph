@@ -6,7 +6,8 @@ function View($canvas)
   this.scene = new THREE.Scene();
 	this.camera = new THREE.GraphCamera(Config.camera.fov,
                                       window.innerWidth / window.innerHeight,
-                                      Config.camera.near, Config.camera.far);
+                                      Config.camera.near, Config.camera.far,
+                                      Config.camera.initialRotation);
   this.camera.lookSpeed = Config.camera.lookSpeed;
   this.scene.addChild(this.camera);
 	this.renderer = new THREE.MyDOMRenderer();
