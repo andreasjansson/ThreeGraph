@@ -93,6 +93,16 @@ Finally, the layout file specifies the {X, Y, Z} positions of the individual gra
      ...
 
 
+Use of three.js
+---------------
+
+I make extensive use of the fantastic [three.js](https://github.com/mrdoob/three.js/) library for 3D rendering. I did however have a few quite particular requirements where I needed to extend three.js.
+
+For one, I wanted to work with DOM elements rather than SVG, Canvas or WebGL. three.js comes with a more or less undocumented DOMRenderer class, but the current version was a bit unpolished and quite limited in the types of materials it supported. I took a copy of it and introduced font resizing and line rendering using CSS3 rotation.
+
+The camera I use is a heavily modified version of the RollCamera class, using smooth drag and drop to navigate.
+
+
 About the example graph
 -----------------------
 
