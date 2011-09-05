@@ -36,6 +36,16 @@ Vector3d.prototype.subtract = function(vector2)
   );
 }
 
+Vector3d.prototype.multiply = function(scalar)
+{
+  return new Vector3d(
+    this.x * scalar,
+    this.y * scalar,
+    this.z * scalar
+  );
+}
+
+
 Vector3d.prototype.divide = function(scalar)
 {
   return new Vector3d(
