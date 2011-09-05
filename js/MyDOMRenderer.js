@@ -3,14 +3,19 @@
  * @author mr.doob / http://mrdoob.com/
  */
 
-THREE.MyDOMRenderer = function () {
+THREE.MyDOMRenderer = function (autoClearInterval, canvas) {
 
 	var _renderList = null,
 	_projector = new THREE.Projector(),
 	_div = document.createElement( 'div' ),
-	_width, _height, _widthHalf, _heightHalf;
+	_width, _height, _widthHalf, _heightHalf,
+  autoClearWait = 0;
 
 	this.domElement = _div;
+  this.canvas = canvas;
+
+  this.autoClearInterval = typeof autoClearInterval == "undefined" ? 0 :
+    autoClearInterval;
 
 	this.setSize = function ( width, height ) {
 
@@ -45,8 +50,11 @@ THREE.MyDOMRenderer = function () {
               Math.round(Math.min(1, 1 - (element.z * 100 - 99)) * 100);
 
             dom.style.fontSize = fontSize + "px";
-						dom.style.left = (v1x - (dom.innerText.length * fontSize / 3)) + 'px';
+						dom.style.left = (v1x - (dom.innerHTML.length * fontSize / 3)) + 'px';
 						dom.style.top = (v1y - fontSize / 2) + 'px';
+
+            if(this.autoClearInterval)
+              dom.setAttribute("data-dirty", "0");
 					}
 				}
 			}
@@ -96,14 +104,43 @@ THREE.MyDOMRenderer = function () {
 			        dom.style.top = y1 + 0.5 * length * Math.sin(angle) + "px";
 			        dom.style.left = x1 - 0.5 * length * (1 - Math.cos(angle)) + "px";
               dom.style.width = length + "px";
-			        dom.style.mozTransform = dom.style.webkitTransform = dom.style.OTransform = "rotate(" + angle + "rad)";
+			        dom.style.MozTransform = dom.style.webkitTransform = dom.style.OTransform = "rotate(" + angle + "rad)";
+
+              if(this.autoClearInterval)
+                dom.setAttribute("data-dirty", "0");
             }
             else {
-              dom.style.width = 0;
+              dom.style.width = "0px";
             }
 					}
 				}
       }
 		}
+
+    // not very generic...
+    if(this.autoClearInterval && ++ autoClearWait > this.autoClearInterval) {
+      autoClearWait = 0;
+      var divs = this.canvas.getElementsByTagName("div");
+      for(var i = 0; i < divs.length; i ++) {
+        var div = divs[i];
+        if(div.getAttribute("data-dirty") == "1") {
+          if(div.class && div.class.indexOf("line") != -1)
+            div.style.width = "0px";
+          else
+            div.style.fontSize = "0px";
+          div.setAttribute("data-dirty", "0");          
+        }
+        else {
+          if(div.class && div.class.indexOf("line") != -1) {
+            if(div.style.width != "0px")
+              div.setAttribute("data-dirty", "1");
+          }
+          else {
+            if(div.style.fontSize != "0px")
+              div.setAttribute("data-dirty", "1");
+          }
+        }
+      }
+    }
 	};
 }

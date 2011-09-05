@@ -4,6 +4,7 @@ Config.fadeTime = 250; // ms
 Config.moveTime = 2000; // ms
 Config.frameRate = 10; // fps
 Config.viewableDistance = 1;
+Config.autoClearInterval = 10; // frames
 
 Config.camera = {};
 Config.camera.fov = 60;
