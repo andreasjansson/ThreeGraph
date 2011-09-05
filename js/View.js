@@ -71,8 +71,6 @@ View.prototype.moveTo = function(graphNode, callback)
   var cameraPos = new Vector3d(this.camera.position);
   var targetPos = graphNode.pos.subtract(cameraPos.directionTo(graphNode.pos).multiply(100));
 
-  console.log(targetPos);
-
   var frameCount = Math.floor((Config.moveTime / 1000) * Config.frameRate);
 
   this.moveFrames = frameCount;
