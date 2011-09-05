@@ -41,6 +41,6 @@ Edge.prototype.removeFromView = function(scene)
 
 Edge.prototype.updateLevel = function()
 {
-  this.$div.attr("class", "level-" + this.currentLevel);
+  this.$div.attr("class", "line level-" + this.currentLevel);
 }
 

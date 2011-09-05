@@ -66,7 +66,7 @@ GraphNode.prototype.niceName = function()
 {
   return decodeURIComponent(this.name)
     .replace(/_/g, " ").replace(/\([^\)]*band\)$/, '')
-    .replace(/#.*$/, "");
+    .replace(/#.*$/, "").replace(/ $/, "");
 }
 
 GraphNode.prototype.onClick = function() { }
