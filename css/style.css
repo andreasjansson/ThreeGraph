@@ -48,7 +48,7 @@ body {
 }
 
 #wrapper {
-    background-image: url("bg.png");
+    background-image: url("../images/bg.png");
     background-repeat: repeat;
     padding: 0;
     border: 0;

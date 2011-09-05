@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf8" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>3dbands</title> 
+    <title>Rockstars</title> 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script type="text/javascript" src="js/Vector2d.js"></script>
     <script type="text/javascript" src="js/Vector3d.js"></script>
@@ -16,15 +16,13 @@
     <script type="text/javascript" src="js/Reader.js"></script>
     <script type="text/javascript" src="js/Config.js"></script>
     <script type="text/javascript" src="js/contrib.js"></script>
-    <script type="text/javascript" src="three/build/Three.js"></script>
+    <script type="text/javascript" src="js/three.js/build/Three.js"></script>
     <script type="text/javascript" src="js/GraphCamera.js"></script>
     <script type="text/javascript" src="js/MyDOMRenderer.js"></script>
     <script type="text/javascript" src="js/LineDOMMaterial.js"></script>
-    <script type="text/javascript" src="three/src/renderers/Projector.js"></script>
+		<script type="text/javascript" src="js/three.js/examples/fonts/optimer_regular.typeface.js"></script>
 
-		<script type="text/javascript" src="three/examples/fonts/optimer_regular.typeface.js"></script>
-
-    <style type="text/css">@import "style.css";</style>
+    <link rel="stylesheet" type="text/css" href="css/style.css" />
   </head>
   <body>
     <div id="loading">
@@ -50,12 +48,12 @@ $(function() {
   window.view = new View($canvas);
 
   var reader = new Reader(
-    "indices.json", "adjlist.json",
-    "layout.json");
+    "data/indices.json", "data/adjlist.json",
+    "data/layout.json");
 
   reader.onLoad = function() {
     var graphNodes = reader.graphNodes;
-    graph = new Graph(graphNodes);//, "Bob_Dylan");
+    graph = new Graph(graphNodes);
 
     resourceLoaded();
   }
