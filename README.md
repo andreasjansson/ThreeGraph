@@ -9,7 +9,7 @@ You pan the camera by moving the mouse while pressing the mouse button. You can 
 Usage
 -----
 
-Using ThreeGraph is <s>dead easy</s> not very difficult. If I have time I'll look into some sort of build tool that can compile all the js files into one, but for now you need to include all of them:
+Using ThreeGraph is ~~dead easy~~ not very difficult. If I have time I'll look into some sort of build tool that can compile all the js files into one, but for now you need to include all of them:
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
     <script type="text/javascript" src="js/ThreeGraph.js"></script>
