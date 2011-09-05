@@ -1,0 +1,85 @@
+html {
+    overflow: hidden;
+    font-family: sans-serif;
+    width: 100%;
+    height: 100%;
+}
+
+body {
+    padding: 0;
+    border: 0;
+    margin: 0;
+    background-color:#e1afe3;
+    background-image: -moz-radial-gradient(center center, ellipse cover, #e1afe3, #6e3c5d 100%);
+    background-image: -webkit-radial-gradient(center center, ellipse cover, #e1afe3, #6e3c5d 100%);
+    background-image: -o-radial-gradient(center center, ellipse cover, #e1afe3, #6e3c5d 100%);
+    background-image: -ms-radial-gradient(center center, ellipse cover, #e1afe3, #6e3c5d 100%);
+    background-image: radial-gradient(center center, ellipse cover, #e1afe3, #6e3c5d 100%)
+}
+
+#loading {
+    position: fixed;
+    display: table;
+    top: 0;
+    left: 0;
+    background-color: black;
+    height: 100%;
+    width: 100%;
+    z-index: 1000;
+}
+
+#loading .message {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+#loading img {
+    display: block;
+    margin: auto;
+    margin-bottom: 24px;
+}
+
+#loading p {
+    text-align: center;
+    display: block;
+    margin: auto;
+    color: #CCC;
+    font-size: 24px;
+}
+
+#wrapper {
+    background-image: url("bg.png");
+    background-repeat: repeat;
+    padding: 0;
+    border: 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#canvas div {
+    position: fixed;
+    font-family: monospace;
+    cursor: pointer;
+    white-space: pre;
+}
+
+#canvas div:hover {
+    text-decoration: underline;
+}
+
+#canvas div.level-1 {
+    opacity: .7;
+}
+#canvas div.level-2 {
+    opacity: .4;
+}
+#canvas div.level-3, div.level-4, div.level-5 {
+    opacity: .2;
+}
+
+#canvas div.line {
+    background-color: #000;
+}
