@@ -4,13 +4,14 @@ function View()
   this.edges;
 
   this.scene = new THREE.Scene();
+  var $canvas = $("#" + Config.canvasID);
 	this.camera = new THREE.GraphCamera(Config.camera.fov,
                                       window.innerWidth / window.innerHeight,
                                       Config.camera.near, Config.camera.far,
-                                      Config.camera.initialRotation);
+                                      Config.camera.initialRotation,
+                                      $canvas[0]);
   this.camera.lookSpeed = Config.camera.lookSpeed;
   this.scene.addChild(this.camera);
-  var $canvas = $("#" + Config.canvasID);
 	this.renderer = new THREE.MyDOMRenderer(Config.camera.autoClearInterval,
                                           $canvas[0]);
 	this.renderer.setSize(window.innerWidth, window.innerHeight);

@@ -20,7 +20,8 @@
  * }
  */
 
-THREE.GraphCamera = function ( fov, aspect, near, far, initialRotation ) {
+THREE.GraphCamera = function (fov, aspect, near, far, initialRotation, canvas)
+{
 
 	THREE.Camera.call( this, fov, aspect, near, far );
 
@@ -35,7 +36,7 @@ THREE.GraphCamera = function ( fov, aspect, near, far, initialRotation ) {
 
 	this.constrainVertical = [ -0.8, 0.8 ];
 
-	this.domElement = document;
+	this.domElement = canvas;
 
 	// disable default camera behavior
 
