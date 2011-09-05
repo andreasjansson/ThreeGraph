@@ -21,7 +21,8 @@ Edge.prototype.prepareForView = function(scene)
   geometry.vertices.push(
     new THREE.Vertex(pos2));
 
-  this.$div = $("<div></div>").appendTo($("#canvas")).fadeIn(Config.fadeTime);
+  this.$div = $("<div></div>").appendTo($("#" + Config.canvasID))
+    .fadeIn(Config.fadeTime);
 
   var material = new THREE.LineDOMMaterial(this.$div[0], {color: 0x000000});
   this.line = new THREE.Line(geometry, material);

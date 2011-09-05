@@ -20,7 +20,7 @@ GraphNode.prototype.addAdjacent = function(graphNode)
 GraphNode.prototype.prepareForView = function(scene)
 {
   this.$div = $("<div>" + this.niceName() + "</div>")
-    .appendTo($("#canvas"))
+    .appendTo($("#" + Config.canvasID))
     .css("font-size", "0px")
     .fadeIn(Config.fadeTime);
   var material = new THREE.ParticleDOMMaterial(this.$div[0]);

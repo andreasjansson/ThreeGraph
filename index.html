@@ -5,6 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <title>Rockstars</title> 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+    <script type="text/javascript" src="js/ThreeGraph.js"></script>
     <script type="text/javascript" src="js/Vector2d.js"></script>
     <script type="text/javascript" src="js/Vector3d.js"></script>
     <script type="text/javascript" src="js/View.js"></script>
@@ -13,14 +14,13 @@
     <script type="text/javascript" src="js/GraphNode.js"></script>
     <script type="text/javascript" src="js/Edge.js"></script>
     <script type="text/javascript" src="js/Reader.js"></script>
-    <script type="text/javascript" src="js/Config.js"></script>
+    <script type="text/javascript" src="js/DefaultConfig.js"></script>
     <script type="text/javascript" src="js/contrib.js"></script>
     <script type="text/javascript" src="js/three.js/build/Three.js"></script>
     <script type="text/javascript" src="js/GraphCamera.js"></script>
     <script type="text/javascript" src="js/MyDOMRenderer.js"></script>
     <script type="text/javascript" src="js/LineDOMMaterial.js"></script>
 		<script type="text/javascript" src="js/three.js/examples/fonts/optimer_regular.typeface.js"></script>
-
     <link rel="stylesheet" type="text/css" href="css/style.css" />
   </head>
   <body>
@@ -36,37 +36,11 @@
     <script type="text/javascript">
 
 $(function() {
-
-  window.controller;
-  window.graph;
-
-  var $canvas = $("#canvas");
-  var loadedResources = 0;
-  var resourcesToLoad = 1;
-
-  window.view = new View($canvas);
-
-  var reader = new Reader(
-    "data/indices.json", "data/adjlist.json",
-    "data/layout.json");
-
-  reader.onLoad = function() {
-    var graphNodes = reader.graphNodes;
-    graph = new Graph(graphNodes);
-
-    resourceLoaded();
-  }
-
-  function resourceLoaded() {
-    if(++ loadedResources < resourcesToLoad)
-      return;
-
+  Config = DefaultConfig;
+  window.threeGraph = new ThreeGraph();
+  threeGraph.onLoad = function() {
     $("#loading").fadeOut();
-
-    controller = new Controller(graph, view);
-    controller.start();
   }
-
 });
 
     </script>

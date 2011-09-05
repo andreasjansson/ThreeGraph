@@ -47,7 +47,7 @@ THREE.MyDOMRenderer = function (autoClearInterval, canvas) {
 						dom = material.domElement;
 
             var fontSize = element.z > .9999 ? 0 :
-              Math.round(Math.min(1, 1 - (element.z * 100 - 99)) * 100);
+              Math.round(Math.min(1, 1 - (element.z * 100 - 99)) * 70);
 
             dom.style.fontSize = fontSize + "px";
 						dom.style.left = (v1x - (dom.innerHTML.length * fontSize / 3)) + 'px';
@@ -124,14 +124,14 @@ THREE.MyDOMRenderer = function (autoClearInterval, canvas) {
       for(var i = 0; i < divs.length; i ++) {
         var div = divs[i];
         if(div.getAttribute("data-dirty") == "1") {
-          if(div.class && div.class.indexOf("line") != -1)
+          if(div.getAttribute("class") && div.getAttribute("class").indexOf("line") != -1)
             div.style.width = "0px";
           else
             div.style.fontSize = "0px";
           div.setAttribute("data-dirty", "0");          
         }
         else {
-          if(div.class && div.class.indexOf("line") != -1) {
+          if(div.getAttribute("class") && div.getAttribute("class").indexOf("line") != -1) {
             if(div.style.width != "0px")
               div.setAttribute("data-dirty", "1");
           }

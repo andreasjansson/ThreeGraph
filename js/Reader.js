@@ -1,17 +1,17 @@
-Reader = function(indicesURL, adjlistURL, layoutURL)
+Reader = function()
 {
-  this.indices = null;
-  this.adjlist = null;
-  this.layout = null;
+  this.indices;
+  this.adjlist;
+  this.layout;
   this.graphNodes = [];
 
   var self = this;
   var checkFunction = function() {
     self.indices && self.adjlist && self.layout && self.parse();
   };
-  this.readIndices(indicesURL, checkFunction);
-  this.readAdjlist(adjlistURL, checkFunction);
-  this.readLayout(layoutURL, checkFunction);
+  this.readIndices(Config.data.indicesURL, checkFunction);
+  this.readAdjlist(Config.data.adjlistURL, checkFunction);
+  this.readLayout(Config.data.layoutURL, checkFunction);
 }
 
 Reader.prototype.readIndices = function(url, callback)

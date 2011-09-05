@@ -59,6 +59,12 @@ body {
     width: 100%;
 }
 
+#canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}
+
 #canvas div {
     position: fixed;
     font-family: monospace;
@@ -71,12 +77,9 @@ body {
 }
 
 #canvas div.level-1 {
-    opacity: .7;
+    opacity: .5;
 }
-#canvas div.level-2 {
-    opacity: .4;
-}
-#canvas div.level-3, div.level-4, div.level-5 {
+#canvas div.level-2, div.level-3, div.level-4, div.level-5 {
     opacity: .2;
 }
 

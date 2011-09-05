@@ -1,4 +1,4 @@
-function View($canvas)
+function View()
 {
   this.graphNodes;
   this.edges;
@@ -10,8 +10,9 @@ function View($canvas)
                                       Config.camera.initialRotation);
   this.camera.lookSpeed = Config.camera.lookSpeed;
   this.scene.addChild(this.camera);
-	this.renderer = new THREE.MyDOMRenderer(Config.autoClearInterval,
-                                          $("#canvas")[0]);
+  var $canvas = $("#" + Config.canvasID);
+	this.renderer = new THREE.MyDOMRenderer(Config.camera.autoClearInterval,
+                                          $canvas[0]);
 	this.renderer.setSize(window.innerWidth, window.innerHeight);
 	$canvas.append(this.renderer.domElement);
 
