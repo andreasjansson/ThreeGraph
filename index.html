@@ -22,6 +22,8 @@
     <script type="text/javascript" src="js/LineDOMMaterial.js"></script>
 		<script type="text/javascript" src="js/three.js/examples/fonts/optimer_regular.typeface.js"></script>
     <link rel="stylesheet" type="text/css" href="css/style.css" />
+
+    <script type="text/javascript" src="js/jquery.marquee.js"></script>
   </head>
   <body>
     <div id="loading">
@@ -31,7 +33,7 @@
       </div>
     </div>
     <div id="top">
-      Wikipedia Rockstar Graph. Pan camera by drag-and-drop. Left click a band to zoom to it. Right click to go to Wikipedia. <a target="_blank" href="https://github.com/andreasjansson/ThreeGraph/blob/master/README.md">Read more here.</a>
+      <marquee behavior="alternate" loop="1" scrollamount="4" direction="left" width="100%"><span id="top-text">Wikipedia Rockstar Graph. Pan camera by drag-and-drop. Left click a band to zoom to it. Right click to go to Wikipedia. <a target="_blank" href="https://github.com/andreasjansson/ThreeGraph/blob/master/README.md">Read more here.</a></span></marquee>
     </div>
     <div id="wrapper">
       <div id="canvas"></div>
@@ -40,10 +42,15 @@
 
 $(function() {
   Config = DefaultConfig;
-  window.threeGraph = new ThreeGraph();
+	var hash = document.location.hash.substr(1);
+  window.threeGraph = new ThreeGraph(hash);
   threeGraph.onLoad = function() {
     $("#loading").fadeOut();
   }
+
+  $("marquee").marquee();
+  var $topText = $("#top-text");
+  $topText.css("padding-left", Math.max(($("body").width() - $topText.width()) / 2, 0) + "px");
 });
 
     </script>

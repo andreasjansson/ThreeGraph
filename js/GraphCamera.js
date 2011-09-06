@@ -34,7 +34,7 @@ THREE.GraphCamera = function (fov, aspect, near, far, initialRotation, canvas)
 	this.movementSpeed = 1;
 	this.rollSpeed = 1;
 
-	this.constrainVertical = [ -0.8, 0.8 ];
+	this.constrainVertical = [ -0.85, 0.8 ];
 
 	this.domElement = canvas;
 

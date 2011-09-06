@@ -3,10 +3,12 @@ function Controller(graph, view)
   this.graph = graph;
   this.view = view;
   this.view.setCameraPosition(graph.centredGraphNode.pos.
-                              subtract(new Vector3d(0, 0, 20)));
+                              subtract(new Vector3d(0, 0, 100)));
 
   this.visibleGraphNodes;
   this.visibleEdges;
+
+  this.listenHistory();
 }
 
 Controller.prototype.start = function()
@@ -60,11 +62,28 @@ Controller.prototype.refreshVisible = function()
   this.visibleEdges = newVisibleEdges;
 }
 
-Controller.prototype.moveTo = function(graphNode)
+Controller.prototype.moveTo = function(graphNode, fromPopState)
 {
   var self = this;
   this.view.moveTo(graphNode, function() {
     self.graph.centredGraphNode = graphNode;
+    location.hash =  graphNode.name;
     self.refreshVisible();
   });
+}
+
+Controller.prototype.listenHistory = function()
+{
+  if(!location.hash ||
+     document.location.hash.substr(1) != this.graph.centredGraphNode.name)
+    location.hash =  this.graph.centredGraphNode.name;
+
+  var self = this;
+  window.onpopstate = function(event) {
+	  var hash = document.location.hash.substr(1);
+    if(hash != self.graph.centredGraphNode.name) {
+      var node = self.graph.getGraphNodeByName(hash);
+      self.moveTo(node, true);
+    }
+  }
 }
