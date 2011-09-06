@@ -104,7 +104,7 @@ THREE.MyDOMRenderer = function (autoClearInterval, canvas) {
 			        dom.style.top = y1 + 0.5 * length * Math.sin(angle) + "px";
 			        dom.style.left = x1 - 0.5 * length * (1 - Math.cos(angle)) + "px";
               dom.style.width = length + "px";
-			        dom.style.MozTransform = dom.style.webkitTransform = dom.style.OTransform = "rotate(" + angle + "rad)";
+			        dom.style.msTransform = dom.style.MozTransform = dom.style.webkitTransform = dom.style.OTransform = "rotate(" + angle + "rad)";
 
               if(this.autoClearInterval)
                 dom.setAttribute("data-dirty", "0");
